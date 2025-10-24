@@ -12,7 +12,14 @@ admin:
 hyperkittyApiKey: supersecret
 djangoSecretKey: supersecret
 
+#Ingress host
 hostname: lists.example.org
+
+#rest auth
+rest:
+  rest_port: "8001"
+#  rest_username:
+#  rest_password:
 
 imagePullSecrets: []
 nameOverride: ""

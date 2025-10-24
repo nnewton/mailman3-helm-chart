@@ -40,13 +40,17 @@ spec:
           imagePullPolicy: {{ .Values.web.image.pullPolicy }}
           env:
             - name: HYPERKITTY_API_KEY
-              value: {{ .Values.hyperkittyApiKey }}
+              value: {{ .Values.hyperkittyApiKey | quote }}
             - name: SECRET_KEY
-              value: {{ .Values.djangoSecretKey }}
+              value: {{ .Values.djangoSecretKey | quote }}
             - name: MAILMAN_REST_URL
-              value: http://{{ include "mailman3.fullname" . }}-core.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}:8001
+              value: {{ printf "http://%s-core.%s.svc.%s:8001" (include "mailman3.fullname" .) .Release.Namespace $clusterDomain | quote }}
+            - name: MAILMAN_REST_USER
+              value: {{ .Values.rest.rest_username | default "restadmin" | quote }}
+            - name: MAILMAN_REST_PASSWORD
+              value: {{ .Values.rest.rest_password | default "restpass" | quote }}
             - name: POSTORIUS_TEMPLATE_BASE_URL
-              value: http://{{ include "mailman3.fullname" . }}-web.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}:80
+              value: {{ printf "http://%s-web.%s.svc.%s:80" (include "mailman3.fullname" .) .Release.Namespace $clusterDomain | quote }}
             {{- if .Values.ingress.enabled }}
             - name: SERVE_FROM_DOMAIN
               value: {{ .Values.hostname | quote }}
@@ -56,15 +60,15 @@ spec:
             - name: DATABASE_TYPE
               value: sqlite
             - name: MAILMAN_ADMIN_USER
-              value: {{ .Values.admin.username }}
+              value: {{ .Values.admin.username | quote }}
             - name: MAILMAN_ADMIN_EMAIL
-              value: {{ .Values.admin.email }}
+              value: {{ .Values.admin.email | quote }}
             {{- if .Values.smtp }}
             - name: SMTP_HOST
-              value: {{ .Values.smtp }}
+              value: {{ .Values.smtp | quote }}
             {{- else }}
             - name: SMTP_HOST
-              value: {{ include "mailman3.fullname" . }}-core.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+              value: {{ printf "%s-core.%s.svc.%s" (include "mailman3.fullname" .) .Release.Namespace $clusterDomain | quote }}
             {{- end }}
           args:
             - uwsgi

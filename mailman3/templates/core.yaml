@@ -42,17 +42,25 @@ spec:
 #            - name: TZ
 #              value: 'Europe/Berlin'
             - name: HYPERKITTY_API_KEY
-              value: {{ .Values.hyperkittyApiKey }}
+              value: {{ .Values.hyperkittyApiKey | quote }}
             - name: HYPERKITTY_URL
-              value: http://{{ include "mailman3.fullname" . }}-web.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}/hyperkitty
+              value: {{ printf "http://%s-web.%s.svc.%s/hyperkitty" (include "mailman3.fullname" .) .Release.Namespace $clusterDomain | quote }}
             - name: MTA
               value: postfix
             - name: SMTP_HOST
-              value: {{ include "mailman3.fullname" . }}-core.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+              value: {{ printf "%s-core.%s.svc.%s" (include "mailman3.fullname" .) .Release.Namespace $clusterDomain | quote }}
             - name: DATABASE_CLASS
               value: mailman.database.sqlite.SQLiteDatabase
             - name: DATABASE_URL
               value: "sqlite:////opt/mailman/var/data/mailman.db"
+            - name: MM_HOSTNAME
+              value: {{ .Values.mailmanCoreListenHostname | default "0.0.0.0" | quote }}
+            - name: MAILMAN_REST_PORT
+              value: {{ .Values.rest.rest_port | default "8001" | quote }}
+            - name: MAILMAN_REST_USER
+              value: {{ .Values.rest.rest_username | default "restadmin" | quote }}
+            - name: MAILMAN_REST_PASSWORD
+              value: {{ .Values.rest.rest_password | default "restpass" | quote }}
           ports:
             - name: api
               containerPort: 8001
