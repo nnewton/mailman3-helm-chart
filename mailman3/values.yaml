@@ -4,13 +4,13 @@
 
 # These are the settings that you MUST change before deploying:
 # Initial Settings for the admin account:
-#admin:
-#  username: mailadmin
-#  email: user@example.org
+admin:
+  username: mailadmin
+  email: user@example.org
 #
 # some keys have to be provided...
-#hyperkittyApiKey: supersecret
-#djangoSecretKey: supersecret
+hyperkittyApiKey: supersecret
+djangoSecretKey: supersecret
 
 hostname: lists.example.org
 
@@ -68,11 +68,16 @@ web:
 service:
   type: ClusterIP
 
+#Postfix config, should be secret or inserted via secret
+postfix:
+  relayHost: ""
+  relayHostUsername: ""
+  relayHostPassword: ""
+
 ingress:
   enabled: false
+  className: ""  # e.g., "nginx" for NGINX Ingress Controller
   tls: false
   annotations:
-    # use NGINX Ingress Controller
-    #kubernetes.io/ingress.class: "nginx"
     # use Cert-Manager for LetsEncrypt Certificates
     #cert-manager.io/issuer: "letsencrypt-prod"
