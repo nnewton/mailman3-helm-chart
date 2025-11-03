@@ -53,8 +53,6 @@ spec:
               value: mailman.database.sqlite.SQLiteDatabase
             - name: DATABASE_URL
               value: "sqlite:////opt/mailman/var/data/mailman.db"
-            - name: MM_HOSTNAME
-              value: {{ .Values.mailmanCoreListenHostname | default "0.0.0.0" | quote }}
             - name: MAILMAN_REST_PORT
               value: {{ .Values.rest.rest_port | default "8001" | quote }}
             - name: MAILMAN_REST_USER
